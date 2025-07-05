@@ -1,3 +1,8 @@
 # webserver
 
-高性能web服务器项目
+高性能web服务器项目，暂时只实现了get请求
+主函数在检查到EPOLLIN事件之后，读取数据并把连接指针挂在到线程池中维护的队列中，线程不断的从任务队列中取到连接并调用该连接的process函数来工作。process函数会调用process_read函数来解析请求，然后调用process_write函数来把需要的信息放入写缓存。之后主动触发一次EPOLLOUT事件，然后在主函数检查到EPOLLOUT事件之后调用把写缓存和请求的文件（文件采用内存映射的方式直接发送）发送到客户端。
+
+main.cpp文件使用io多路复用技术监听事件。
+threadpool.h创建线程池。子线程不断的执行worker函数，worker函数调用run函数，run调用连接的process函数执行业务逻辑。
+http_conn使用状态机来控制解析流程。

@@ -72,7 +72,7 @@ int main( int argc, char* argv[] ) {
 
     // 创建epoll对象，和事件数组，添加
     epoll_event events[ MAX_EVENT_NUMBER ];
-    int epollfd = epoll_create( 5 );
+    int epollfd = epoll_create1( 0 );
     // 添加到epoll对象中
     addfd( epollfd, listenfd, false );
     http_conn::m_epollfd = epollfd;
